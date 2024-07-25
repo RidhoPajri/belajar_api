@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\User;
+use App\Models\User;
+use Auth;
 use Validator;
 use Hash;
-use Auth;
 
 class AuthController extends Controller
 {
+
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|max:8',
+            'password' => 'required|string|min:8',
         ]);
 
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return response()->json($validator->errors());
         }
 
@@ -35,22 +35,22 @@ class AuthController extends Controller
             'message' => 'user berhasil dibuat',
         ]);
     }
-
     public function login(Request $request)
     {
-        if(!Auth::attemp($request->only('email','password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Unauthorized',
-            ],401);
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login Success',
+            'message' => 'Login success',
             'access_token' => $token,
-            'token_type' => 'Bearer',
+            'token_type' => 'Bearer'
         ]);
     }
 
@@ -58,7 +58,7 @@ class AuthController extends Controller
     {
         Auth::user()->tokens()->delete();
         return response()->json([
-            'message' => 'logout success'
+            'message' => 'logout success',
         ]);
     }
 }
