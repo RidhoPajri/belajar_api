@@ -1,12 +1,20 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Auth;
 use Validator;
 use Hash;
+// namespace App\Http\Controllers\Api;
+
+// use App\Http\Controllers\Controllers;
+// use Illuminate\Http\Request;
+// use App\Models\User;
+// use Auth;
+// use Validator;
+// use Hash;
 
 class AuthController extends Controller
 {
